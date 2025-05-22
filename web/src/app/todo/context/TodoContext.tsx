@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { nanoid } from 'nanoid'
+
+const apiUrl = 'http://localhost:8080/api';
 
 interface TodoContextProps {
   todos: Todo[]
@@ -10,7 +11,7 @@ interface TodoContextProps {
 }
 
 export interface Todo {
-  id: string
+  id?: string
   text: string
   status: 'undone' | 'completed'
 }
@@ -24,9 +25,9 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
 
   useEffect(() => {
     async function fetchPosts() {
-      const res = await fetch('http://localhost:8080/api/todos')
+      const res = await fetch(`${apiUrl}/todos`)
       const data = await res.json()
-
+      console.log('data>>>>', data);
       setTodos(data)
     }
     fetchPosts()
@@ -35,12 +36,11 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
   // ::: ADD NEW TODO :::
   const addTodo = (text: string) => {
     const newTodo: Todo = {
-      id: nanoid(),
       text,
       status: 'undone',
     }
 
-    fetch('http://localhost:8080/api/todos', {
+    fetch(`${apiUrl}/todos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newTodo)
@@ -54,7 +54,15 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
 
   // ::: DELETE A TODO :::
   const deleteTodo = (id: string) => {
-    setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id))
+    fetch(`${apiUrl}/todos/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then((res: any) => {
+        setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id))
+      }).catch((e: Error) => {
+        console.log(e);
+      });
   }
 
   // ::: EDIT A TODO :::
