@@ -90,10 +90,17 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
 
   // ::: UPDATE TODO STATUS :::
   const updateTodoStatus = (id: string) => {
+    const todosMap = todos.map(todo => {
+      if (todo.id === id) {
+        return {
+          status: todo.status === 'undone' ? 'completed' : 'undone',
+        }
+      }
+    });
     fetch(`${apiUrl}/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, status: 'completed' })
+      body: JSON.stringify({ id, status: todosMap[0]?.status })
     })
       .then((res: any) => {
         setTodos(prevTodos => {
