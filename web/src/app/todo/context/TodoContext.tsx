@@ -26,7 +26,7 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
     async function fetchPosts() {
       const res = await fetch('http://localhost:8080/api/todos')
       const data = await res.json()
-      console.log('data>>>>', data);
+
       setTodos(data)
     }
     fetchPosts()
@@ -40,7 +40,16 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
       status: 'undone',
     }
 
-    setTodos([...todos, newTodo])
+    fetch('http://localhost:8080/api/todos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newTodo)
+    })
+      .then((res: any) => {
+        setTodos([...todos, newTodo])
+      }).catch((e: Error) => {
+        console.log(e);
+      });
   }
 
   // ::: DELETE A TODO :::
