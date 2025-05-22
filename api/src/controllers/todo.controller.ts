@@ -13,7 +13,7 @@ export default class TodoController {
 
     try {
       const todo: Todo = req.body;
-      if (!todo.completed) todo.completed = false;
+      if (!todo.status) todo.status = 'undone';
 
       const savedTodo = await todoRepository.save(todo);
 
@@ -116,7 +116,7 @@ export default class TodoController {
 
   async findAllCompleted(req: Request, res: Response) {
     try {
-      const todos = await todoRepository.retrieveAll({ completed: true });
+      const todos = await todoRepository.retrieveAll({ status: true });
 
       res.status(200).send(todos);
     } catch (err) {

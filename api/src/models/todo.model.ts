@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType } from "sequelize-typescript";
+import { Model, Table, Column, DataType, Default } from "sequelize-typescript";
 
 @Table({
   tableName: "todos",
@@ -19,8 +19,9 @@ export default class Todo extends Model {
   text?: string;
 
   @Column({
-    type: DataType.BOOLEAN,
-    field: "completed"
+    type: DataType.STRING(255),
+    field: "status",
+    defaultValue: "undone"
   })
-  completed?: boolean;
+  status?: string;
 }

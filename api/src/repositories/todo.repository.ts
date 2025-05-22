@@ -3,7 +3,7 @@ import Todo from "../models/todo.model";
 
 interface ITodoRepository {
   save(todo: Todo): Promise<Todo>;
-  retrieveAll(searchParams: {text: string, completed: boolean}): Promise<Todo[]>;
+  retrieveAll(searchParams: {text: string, status: boolean}): Promise<Todo[]>;
   retrieveById(todoId: number): Promise<Todo | null>;
   update(todo: Todo): Promise<number>;
   delete(todoId: number): Promise<number>;
@@ -19,18 +19,18 @@ class TodoRepository implements ITodoRepository {
     try {
       return await Todo.create({
         text: todo.text,
-        completed: todo.completed
+        status: todo.status
       });
     } catch (err) {
       throw new Error("Failed to create Todo!");
     }
   }
 
-  async retrieveAll(searchParams: {text?: string, completed?: boolean}): Promise<Todo[]> {
+  async retrieveAll(searchParams: {text?: string, status?: boolean}): Promise<Todo[]> {
     try {
       let condition: SearchCondition = {};
 
-      if (searchParams?.completed) condition.completed = true;
+      if (searchParams?.status) condition.status = true;
 
       if (searchParams?.text)
         condition.text = { [Op.iLike]: `%${searchParams.text}%` };
@@ -50,11 +50,11 @@ class TodoRepository implements ITodoRepository {
   }
 
   async update(todo: Todo): Promise<number> {
-    const { id, text, completed } = todo;
+    const { id, text, status } = todo;
 
     try {
       const affectedRows = await Todo.update(
-        { text, completed },
+        { text, status },
         { where: { id: id } }
       );
 

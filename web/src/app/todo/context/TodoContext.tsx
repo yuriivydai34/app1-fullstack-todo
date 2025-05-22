@@ -39,7 +39,6 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
     const newTodo: Todo = {
       text,
       status: 'undone',
-
       id: nanoid()
     }
 
@@ -91,17 +90,26 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
 
   // ::: UPDATE TODO STATUS :::
   const updateTodoStatus = (id: string) => {
-    setTodos(prevTodos => {
-      return prevTodos.map(todo => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            status: todo.status === 'undone' ? 'completed' : 'undone',
-          }
-        }
-        return todo
-      })
+    fetch(`${apiUrl}/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status: 'completed' })
     })
+      .then((res: any) => {
+        setTodos(prevTodos => {
+          return prevTodos.map(todo => {
+            if (todo.id === id) {
+              return {
+                ...todo,
+                status: todo.status === 'undone' ? 'completed' : 'undone',
+              }
+            }
+            return todo
+          })
+        })
+      }).catch((e: Error) => {
+        console.log(e);
+      });
   }
 
   const value: TodoContextProps = {
