@@ -28,7 +28,6 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
     async function fetchPosts() {
       const res = await fetch(`${apiUrl}`)
       const data = await res.json()
-      console.log('data>>>>', data);
       setTodos(data)
     }
     fetchPosts()
