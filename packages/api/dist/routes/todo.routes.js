@@ -4,6 +4,7 @@ const express_1 = require("express");
 const todo_controller_1 = require("../controllers/todo.controller");
 const router = (0, express_1.Router)();
 const todoController = new todo_controller_1.TodoController();
+// Bind methods to maintain 'this' context
 router.post("/", todoController.create);
 router.get("/", todoController.findAll);
 router.get("/completed", todoController.findAllCompleted);
