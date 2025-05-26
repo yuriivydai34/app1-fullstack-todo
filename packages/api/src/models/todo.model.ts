@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, Default } from "sequelize-typescript";
+import { Model, Table, Column, DataType } from "sequelize-typescript";
 
 @Table({
   tableName: "todos",
