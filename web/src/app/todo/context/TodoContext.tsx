@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { nanoid } from 'nanoid'
 
 const apiUrl = 'http://localhost:8080/api/todos';
 
@@ -37,8 +36,7 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
   const addTodo = (text: string) => {
     const newTodo: Todo = {
       text,
-      status: 'undone',
-      id: nanoid()
+      status: 'undone'
     }
 
     fetch(`${apiUrl}`, {
@@ -46,8 +44,9 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newTodo)
     })
-      .then((res: any) => {
-        setTodos([...todos, newTodo])
+      .then((res) => res.json())
+      .then((savedTodo) => {
+        setTodos([...todos, savedTodo])
       }).catch((e: Error) => {
         console.log(e);
       });
@@ -89,17 +88,15 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
 
   // ::: UPDATE TODO STATUS :::
   const updateTodoStatus = (id: string) => {
-    const todosMap = todos.map(todo => {
-      if (todo.id === id) {
-        return {
-          status: todo.status === 'undone' ? 'completed' : 'undone',
-        }
-      }
-    });
+    const todoToUpdate = todos.find(todo => todo.id === id);
+    if (!todoToUpdate) return;
+
+    const newStatus = todoToUpdate.status === 'undone' ? 'completed' : 'undone';
+
     fetch(`${apiUrl}/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, status: todosMap[0]?.status })
+      body: JSON.stringify({ id, status: newStatus })
     })
       .then((res: any) => {
         setTodos(prevTodos => {
@@ -107,7 +104,7 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
             if (todo.id === id) {
               return {
                 ...todo,
-                status: todo.status === 'undone' ? 'completed' : 'undone',
+                status: newStatus,
               }
             }
             return todo

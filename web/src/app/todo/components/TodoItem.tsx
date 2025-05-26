@@ -26,7 +26,8 @@ export const TodoItem = (props: { todo: Todo }) => {
     }
   }, [editingTodoId])
 
-  const handleEdit = (todoId: string, todoText: string) => {
+  const handleEdit = (todoId: string | undefined, todoText: string) => {
+    if (!todoId) return;
     setEditingTodoId(todoId)
     setEditingTodoText(todoText)
 
@@ -35,7 +36,8 @@ export const TodoItem = (props: { todo: Todo }) => {
     }
   }
 
-  const handleUpdate = (todoId: string) => {
+  const handleUpdate = (todoId: string | undefined) => {
+    if (!todoId) return;
     if (editingTodoText.trim() !== '') {
       editTodo(todoId, editingTodoText)
       setEditingTodoId(null)
@@ -46,12 +48,14 @@ export const TodoItem = (props: { todo: Todo }) => {
     }
   }
 
-  const handleDelete = (todoId: string) => {
+  const handleDelete = (todoId: string | undefined) => {
+    if (!todoId) return;
     deleteTodo(todoId)
     toast.success('Todo deleted successfully!')
   }
 
-  const handleStatusUpdate = (todoId: string) => {
+  const handleStatusUpdate = (todoId: string | undefined) => {
+    if (!todoId) return;
     updateTodoStatus(todoId)
     toast.success('Todo status updated successfully!')
   }
@@ -61,8 +65,8 @@ export const TodoItem = (props: { todo: Todo }) => {
       layout
       key={todo.id}
       className={cn(
-        'p-5 rounded-xl bg-zinc-900',
-        todo.status === 'completed' && 'bg-opacity-50 text-zinc-500',
+        'p-5 rounded-xl bg-zinc-900 text-white',
+        todo.status === 'completed' && 'bg-opacity-50 text-zinc-400',
       )}
     >
       {editingTodoId === todo.id ? (
@@ -94,12 +98,12 @@ export const TodoItem = (props: { todo: Todo }) => {
           <div className="flex justify-between gap-5 text-white">
             <button onClick={() => handleStatusUpdate(todo.id)}>
               {todo.status === 'undone' ? (
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1 text-blue-300">
                   <BsCheck2Square />
                   Mark Completed
                 </span>
               ) : (
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1 text-yellow-300">
                   <TbRefresh />
                   Mark Undone
                 </span>
@@ -108,7 +112,7 @@ export const TodoItem = (props: { todo: Todo }) => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleEdit(todo.id, todo.text)}
-                className="flex items-center gap-1 "
+                className="flex items-center gap-1 text-blue-300"
               >
                 <FaRegEdit />
                 Edit
