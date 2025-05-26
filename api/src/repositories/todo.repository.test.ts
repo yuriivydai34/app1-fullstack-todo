@@ -2,22 +2,17 @@ import { jest } from '@jest/globals';
 import { Sequelize } from 'sequelize-typescript';
 import TodoRepository from './todo.repository';
 import Todo from '../models/todo.model';
-import { config, dialect } from '../config/db.config';
 
 let sequelize: Sequelize;
 
 beforeAll(async () => {
-  // Use a test database
   sequelize = new Sequelize({
-    database: config.DB + '_test',
-    username: config.USER,
-    password: config.PASSWORD,
-    host: config.HOST,
-    dialect: dialect,
+    dialect: 'sqlite',
+    storage: ':memory:',
     logging: false,
     models: [Todo]
   });
-  await sequelize.sync({ force: true }); // This will recreate all tables
+  await sequelize.sync({ force: true });
 });
 
 afterAll(async () => {
@@ -26,7 +21,7 @@ afterAll(async () => {
 
 describe('TodoRepository', () => {
   beforeEach(async () => {
-    await Todo.destroy({ where: {}, truncate: true, cascade: true });
+    await Todo.destroy({ where: {}, truncate: true });
   });
 
   it('should save todo', async () => {
