@@ -1,0 +1,15 @@
+{
+  "name": "fullstack-todo-app",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev:api & npm run dev:web",
+    "dev:api": "npm run dev --workspace=@todo/api",
+    "dev:web": "npm run dev --workspace=@todo/web",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces"
+  }
+} 

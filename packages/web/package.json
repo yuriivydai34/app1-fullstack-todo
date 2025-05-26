@@ -1,5 +1,5 @@
 {
-  "name": "app1-nextjs-todo",
+  "name": "@todo/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {

@@ -1,5 +1,5 @@
 {
-  "name": "typescript-orm-postgres",
+  "name": "@todo/api",
   "version": "1.0.0",
   "description": "Rest API using Node.js, TypeScript ORM Sequelize, Express, Postgres",
   "main": "server.ts",
